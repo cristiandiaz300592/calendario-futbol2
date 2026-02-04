@@ -1,17 +1,13 @@
 const partidos = [
   {
-    fecha: "Sábado 17 de febrero",
+    fecha: "Viernes 6 de febrero",
     juegos: [
       {
-        equipos: "Colo-Colo vs Cobresal",
-        hora: "18:00",
+        equipos: "Audax Italiano vs Universidad de Concepcion",
+        hora: "20:00",
         canal: "TNT Sports"
       },
-      {
-        equipos: "Unión Española vs Everton",
-        hora: "20:30",
-        canal: "ESPN"
-      }
+     
     ]
   },
   {
@@ -50,3 +46,4 @@ partidos.forEach(dia => {
 
   contenedor.appendChild(divFecha);
 });
+
