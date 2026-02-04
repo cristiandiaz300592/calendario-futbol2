@@ -1,0 +1,54 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+header {
+  background-color: #0b3c5d;
+  color: white;
+  padding: 16px;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 24px;
+  margin: 0;
+}
+
+header p {
+  font-size: 18px;
+  margin: 4px 0 0 0;
+}
+
+main {
+  padding: 16px;
+}
+
+.fecha {
+  margin-top: 24px;
+}
+
+.fecha h2 {
+  font-size: 22px;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 6px;
+}
+
+.partido {
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.equipos {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.detalle {
+  font-size: 18px;
+  margin-top: 6px;
+}
