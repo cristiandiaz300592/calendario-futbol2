@@ -1,5 +1,3 @@
-alert("script cargado");
-
 const partidos = [
   {
     fecha: "Viernes 6 de febrero",
@@ -52,6 +50,7 @@ partidos.forEach(dia => {
 
   contenedor.appendChild(divFecha);
 });
+
 
 
 
