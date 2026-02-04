@@ -11,13 +11,18 @@ const partidos = [
     ]
   },
   {
-    fecha: "Domingo 18 de febrero",
+    fecha: "Sabado 7 de febrero",
     juegos: [
       {
-        equipos: "Universidad de Chile vs Palestino",
-        hora: "17:00",
+        equipos: "Coquimbo Unido vs Palestino",
+        hora: "12:00",
         canal: "TNT Sports"
       }
+  {
+       equipos: "O'higgins vs La Serena",
+        hora: "18:00",
+        canal: "TNT Sports
+    }
     ]
   }
 ];
@@ -46,6 +51,7 @@ partidos.forEach(dia => {
 
   contenedor.appendChild(divFecha);
 });
+
 
 
 
