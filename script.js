@@ -6,8 +6,7 @@ const partidos = [
         equipos: "Audax Italiano vs Universidad de Concepcion",
         hora: "20:00",
         canal: "TNT Sports"
-      },
-     
+      }
     ]
   },
   {
@@ -17,12 +16,12 @@ const partidos = [
         equipos: "Coquimbo Unido vs Palestino",
         hora: "12:00",
         canal: "TNT Sports"
-      }
-  {
-       equipos: "O'higgins vs La Serena",
+      },
+      {
+        equipos: "O'Higgins vs La Serena",
         hora: "18:00",
-        canal: "TNT Sports
-    }
+        canal: "TNT Sports"
+      }
     ]
   }
 ];
@@ -51,6 +50,7 @@ partidos.forEach(dia => {
 
   contenedor.appendChild(divFecha);
 });
+
 
 
 
