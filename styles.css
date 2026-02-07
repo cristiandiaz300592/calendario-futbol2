@@ -52,12 +52,19 @@ main {
   font-size: 18px;
   margin-top: 6px;
 }
+
+/* 🔶 DESTACADO DEL DÍA DE HOY */
 .fecha.hoy {
-  border-left: 8px solid #ef6c00;
+  border-left: 10px solid #ef6c00;
   background-color: #fff3e0;
-  padding: 12px;
-  border-radius: 10px;
+  padding: 16px;
+  border-radius: 12px;
 }
+
+/* 🔎 TEXTO MÁS GRANDE SOLO PARA HOY */
+.fecha.hoy h2 {
+  font-size: 26p
+
 
 
 
