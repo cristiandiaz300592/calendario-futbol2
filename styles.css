@@ -53,11 +53,14 @@ main {
   margin-top: 6px;
 }
 .fecha.hoy {
-  border-left: 8px solid #1565c0;
-  background-color: #e3f2fd;
+  border-left: 8px solid #ef6c00;
+  background-color: #fff3e0;
   padding: 12px;
   border-radius: 10px;
 }
+
+
+
 
 
 
