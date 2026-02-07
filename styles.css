@@ -1,26 +1,58 @@
-/* 🔶 DESTACADO DEL DÍA DE HOY */
-.fecha.hoy {
-  border-left: 6px solid #ef6c00; /* línea naranjo */
-  padding-left: 10px;            /* separación elegante */
-  background-color: transparent; /* mantiene fondo normal */
-  border-radius: 0;              /* evita deformaciones */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #ffffff;
+  color: #000000;
 }
 
-/* 📅 Fecha del día de hoy */
-.fecha.hoy h2 {
-  font-size: 22px;   /* mismo tamaño que los demás días */
-  color: #ef6c00;    /* naranjo visible */
+header {
+  background-color: #0b3c5d;
+  color: white;
+  padding: 16px;
+  text-align: center;
 }
 
-/* ❌ No se modifica tamaño de partidos */
-.fecha.hoy .equipos {
-  font-size: 20px;   /* igual al resto */
-  color: #000;
+header h1 {
+  font-size: 24px;
+  margin: 0;
 }
 
-.fecha.hoy .detalle {
-  font-size: 18px;   /* igual al resto */
+header p {
+  font-size: 18px;
+  margin: 4px 0 0 0;
 }
+
+main {
+  padding: 16px;
+}
+
+.fecha {
+  margin-top: 24px;
+}
+
+.fecha h2 {
+  font-size: 22px;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 6px;
+}
+
+.partido {
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.equipos {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.detalle {
+  font-size: 18px;
+  margin-top: 6px;
+}
+
 
 
 
