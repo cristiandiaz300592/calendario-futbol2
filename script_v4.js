@@ -1,36 +1,73 @@
-console.log("JS cargado correctamente");
-
-const URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7Zwum05QM61k6on31_lCsxA4UFWx6nvTiA1BfA1_loV1Mc0N6mHAxEYXjO_ukKSgw/pub?gid=0&single=true&output=csv";
-
 const contenedor = document.getElementById("calendario");
 
-fetch(URL)
-  .then(response => response.text())
+// URL CSV publicada de Google Sheets
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7Zwum05QM61k6on31_lCsxA4UFWx6nvTiA1BfA1_loV1Mc0N6mHAxEYXjO_ukKSgw/pub?gid=0&single=true&output=csv";
+
+// Fecha de hoy
+const hoy = new Date().toISOString().slice(0, 10);
+
+fetch(CSV_URL)
+  .then(res => res.text())
   .then(texto => {
-    console.log("CSV recibido");
-    console.log(texto);
+    const filas = texto.split("\n").slice(1); // saltar encabezado
+    const fechas = {};
 
-    const lineas = texto.trim().split("\n");
-    const encabezados = lineas.shift().split(",");
+    filas.forEach(fila => {
+      if (!fila.trim()) return;
 
-    console.log("Encabezados:", encabezados);
+      const columnas = fila.split(",");
 
-    lineas.forEach(linea => {
-      const columnas = linea.split(",");
+      const fechaISO = columnas[0]?.trim();
+      const fechaTexto = columnas[1]?.trim();
+      const partido = columnas[2]?.trim();
+      const hora = columnas[3]?.trim();
+      const canal = columnas[4]?.trim();
 
-      const div = document.createElement("div");
-      div.className = "partido";
-      div.innerHTML = `
-        <div class="equipos">${columnas[1]}</div>
-        <div class="detalle">⏰ ${columnas[2]} &nbsp;&nbsp; 📺 ${columnas[3]}</div>
-      `;
+      if (!fechas[fechaISO]) {
+        fechas[fechaISO] = {
+          fechaTexto,
+          juegos: []
+        };
+      }
 
-      contenedor.appendChild(div);
+      fechas[fechaISO].juegos.push({
+        equipos: partido,
+        hora,
+        canal
+      });
     });
+
+    Object.keys(fechas).forEach(fechaISO => {
+      const dia = fechas[fechaISO];
+
+      const divFecha = document.createElement("div");
+      divFecha.className = "fecha";
+
+      if (fechaISO === hoy) {
+        divFecha.classList.add("hoy");
+      }
+
+      const h2 = document.createElement("h2");
+      h2.textContent = "📅 " + dia.fechaTexto;
+      divFecha.appendChild(h2);
+
+      dia.juegos.forEach(juego => {
+        const divPartido = document.createElement("div");
+        divPartido.className = "partido";
+        divPartido.innerHTML = `
+          <div class="equipos">${juego.equipos}</div>
+          <div class="detalle">⏰ ${juego.hora} &nbsp;&nbsp; 📺 ${juego.canal}</div>
+        `;
+        divFecha.appendChild(divPartido);
+      });
+
+      contenedor.appendChild(divFecha);
+    });
+
+    console.log("Calendario cargado correctamente");
   })
-  .catch(error => {
-    console.error("Error al cargar CSV:", error);
+  .catch(err => {
+    console.error("Error cargando CSV:", err);
   });
 
 
