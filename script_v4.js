@@ -1,57 +1,49 @@
 const contenedor = document.getElementById("calendario");
 
-// URL CSV publicada de Google Sheets
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7Zwum05QM61k6on31_lCsxA4UFWx6nvTiA1BfA1_loV1Mc0N6mHAxEYXjO_ukKSgw/pub?gid=0&single=true&output=csv";
-
-// Fecha de hoy
-const hoy = new Date().toISOString().slice(0, 10);
 
 fetch(CSV_URL)
   .then(res => res.text())
   .then(texto => {
-    const filas = texto.split("\n").slice(1); // saltar encabezado
+    const filas = texto.split("\n").slice(1);
     const fechas = {};
 
     filas.forEach(fila => {
       if (!fila.trim()) return;
 
-      const columnas = fila.split(",");
+      const [fechaTexto, partido, hora, canal] = fila.split(",");
 
-      const fechaISO = columnas[0]?.trim();
-      const fechaTexto = columnas[1]?.trim();
-      const partido = columnas[2]?.trim();
-      const hora = columnas[3]?.trim();
-      const canal = columnas[4]?.trim();
-
-      if (!fechas[fechaISO]) {
-        fechas[fechaISO] = {
-          fechaTexto,
-          juegos: []
-        };
+      if (!fechas[fechaTexto]) {
+        fechas[fechaTexto] = [];
       }
 
-      fechas[fechaISO].juegos.push({
+      fechas[fechaTexto].push({
         equipos: partido,
         hora,
         canal
       });
     });
 
-    Object.keys(fechas).forEach(fechaISO => {
-      const dia = fechas[fechaISO];
-
+    Object.keys(fechas).forEach(fecha => {
       const divFecha = document.createElement("div");
       divFecha.className = "fecha";
 
-      if (fechaISO === hoy) {
+      // 👉 Resaltar si el texto contiene el día de hoy
+      const hoyTexto = new Date().toLocaleDateString("es-CL", {
+        weekday: "long",
+        day: "numeric",
+        month: "long"
+      });
+
+      if (fecha.toLowerCase().includes(hoyTexto.split(" ")[0])) {
         divFecha.classList.add("hoy");
       }
 
       const h2 = document.createElement("h2");
-      h2.textContent = "📅 " + dia.fechaTexto;
+      h2.textContent = "📅 " + fecha;
       divFecha.appendChild(h2);
 
-      dia.juegos.forEach(juego => {
+      fechas[fecha].forEach(juego => {
         const divPartido = document.createElement("div");
         divPartido.className = "partido";
         divPartido.innerHTML = `
@@ -64,10 +56,7 @@ fetch(CSV_URL)
       contenedor.appendChild(divFecha);
     });
 
-    console.log("Calendario cargado correctamente");
+    console.log("Calendario cargado OK");
   })
-  .catch(err => {
-    console.error("Error cargando CSV:", err);
-  });
-
+  .catch(err => console.error(err));
 
