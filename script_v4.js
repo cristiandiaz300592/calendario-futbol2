@@ -3,9 +3,9 @@ const contenedor = document.getElementById("calendario");
 // URL CSV publicada de Google Sheets
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7Zwum05QM61k6on31_lCsxA4UFWx6nvTiA1BfA1_loV1Mc0N6mHAxEYXjO_ukKSgw/pub?gid=0&single=true&output=csv";
 
-// Fecha de hoy
+// Fecha de hoy sin hora
 const hoy = new Date();
-hoy.setHours(0, 0, 0, 0); // solo fecha, sin horas
+hoy.setHours(0,0,0,0);
 
 fetch(CSV_URL)
   .then(res => res.text())
@@ -17,10 +17,14 @@ fetch(CSV_URL)
       return;
     }
 
-    // Detectar separador automáticamente
     const separador = lineas[0].includes(";") ? ";" : ",";
     const filas = lineas.slice(1);
     const fechas = {};
+
+    const meses = {
+      enero:0, febrero:1, marzo:2, abril:3, mayo:4, junio:5,
+      julio:6, agosto:7, septiembre:8, octubre:9, noviembre:10, diciembre:11
+    };
 
     filas.forEach(fila => {
       if (!fila.trim()) return;
@@ -33,24 +37,19 @@ fetch(CSV_URL)
 
       if (!fechaTexto || !partido) return;
 
-      // Convertimos fecha de la planilla a Date para comparar
-      const partes = fechaTexto.toLowerCase().split(" "); // ej: "Sábado 7 de febrero"
+      // Parsear la fecha de la planilla
+      const partes = fechaTexto.toLowerCase().split(" "); // ej: ["sábado", "7", "de", "febrero"]
       const dia = parseInt(partes[1]);
-      const mesNombre = partes[3];
-      const mesMap = {
-        enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
-        julio: 6, agosto: 7, septiembre: 8, octubre: 9, noviembre: 10, diciembre: 11
-      };
-      const mes = mesMap[mesNombre];
+      const mes = meses[partes[3]];
       const anio = hoy.getFullYear(); // asumimos este año
-      const fechaISO = new Date(anio, mes, dia);
-      fechaISO.setHours(0, 0, 0, 0);
+      const fechaObj = new Date(anio, mes, dia);
+      fechaObj.setHours(0,0,0,0);
 
-      // Filtramos partidos pasados
-      if (fechaISO < hoy) return;
+      // Filtrar partidos pasados
+      if (fechaObj < hoy) return;
 
       if (!fechas[fechaTexto]) fechas[fechaTexto] = [];
-      fechas[fechaTexto].push({ partido, hora, canal, fechaISO });
+      fechas[fechaTexto].push({ partido, hora, canal, fechaObj });
     });
 
     contenedor.innerHTML = "";
@@ -59,8 +58,7 @@ fetch(CSV_URL)
       const divFecha = document.createElement("div");
       divFecha.className = "fecha";
 
-      // 🔶 Resaltar día de hoy
-      const esHoy = fechas[fechaTexto][0].fechaISO.getTime() === hoy.getTime();
+      const esHoy = fechas[fechaTexto][0].fechaObj.getTime() === hoy.getTime();
       if (esHoy) divFecha.classList.add("hoy");
 
       const h2 = document.createElement("h2");
