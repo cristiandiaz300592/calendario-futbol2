@@ -53,6 +53,17 @@ main {
   margin-top: 6px;
 }
 
+/* 🔶 DESTACADO DEL DÍA DE HOY */
+.fecha.hoy {
+  border-left: 6px solid #ef6c00;
+  padding-left: 12px;
+}
+
+/* 📅 Color del título de hoy */
+.fecha.hoy h2 {
+  color: #ef6c00;
+}
+
 
 
 
