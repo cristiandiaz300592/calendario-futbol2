@@ -1,6 +1,7 @@
 const partidos = [
   {
     fecha: "Viernes 6 de febrero",
+    fechaISO: "2026-02-06",
     juegos: [
       {
         equipos: "Audax Italiano vs Universidad de Concepción",
@@ -11,6 +12,7 @@ const partidos = [
   },
   {
     fecha: "Sábado 7 de febrero",
+    fechaISO: "2026-02-07",
     juegos: [
       {
         equipos: "Coquimbo Unido vs Palestino",
@@ -31,6 +33,7 @@ const partidos = [
   },
   {
     fecha: "Domingo 8 de febrero",
+    fechaISO: "2026-02-08",
     juegos: [
       {
         equipos: "Huachipato vs Universidad de Chile",
@@ -51,6 +54,7 @@ const partidos = [
   },
   {
     fecha: "Lunes 9 de febrero",
+    fechaISO: "2026-02-09",
     juegos: [
       {
         equipos: "Unión La Calera vs Cobresal",
@@ -62,10 +66,16 @@ const partidos = [
 ];
 
 const contenedor = document.getElementById("calendario");
+const hoy = new Date().toISOString().slice(0, 10);
 
 partidos.forEach(dia => {
   const divFecha = document.createElement("div");
   divFecha.className = "fecha";
+
+  // 👉 Resaltar día de hoy
+  if (dia.fechaISO === hoy) {
+    divFecha.classList.add("hoy");
+  }
 
   const tituloFecha = document.createElement("h2");
   tituloFecha.textContent = "📅 " + dia.fecha;
@@ -85,10 +95,3 @@ partidos.forEach(dia => {
 
   contenedor.appendChild(divFecha);
 });
-
-
-
-
-
-
-
