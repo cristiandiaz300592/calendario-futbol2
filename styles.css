@@ -52,3 +52,10 @@ main {
   font-size: 18px;
   margin-top: 6px;
 }
+.fecha.hoy {
+  border-left: 8px solid #2e7d32;
+  background-color: #e8f5e9;
+  padding: 12px;
+  border-radius: 10px;
+}
+
