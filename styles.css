@@ -9,7 +9,7 @@
 /* 🔎 TEXTO MÁS GRANDE SOLO PARA HOY */
 .fecha.hoy h2 {
   font-size: 26px;
-  color: #ef6c00;
+   color: #e65100;
 }
 
 .fecha.hoy .equipos {
@@ -20,3 +20,4 @@
 .fecha.hoy .detalle {
   font-size: 20px;
 }
+
