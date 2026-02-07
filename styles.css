@@ -8,9 +8,10 @@
 
 /* 🔎 TEXTO MÁS GRANDE SOLO PARA HOY */
 .fecha.hoy h2 {
-  font-size: 26px;
-   color: #e65100;
+  font-size: 22px;   /* mismo tamaño que los demás días */
+  color: #e65100;    /* se mantiene el naranjo */
 }
+
 
 .fecha.hoy .equipos {
   font-size: 22px;
@@ -20,4 +21,5 @@
 .fecha.hoy .detalle {
   font-size: 20px;
 }
+
 
