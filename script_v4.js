@@ -1,3 +1,13 @@
+const hoy = new Date();
+
+const opciones = { weekday: "long", day: "numeric", month: "long" };
+const hoyTexto = hoy
+  .toLocaleDateString("es-CL", opciones)
+  .replace(",", "")
+  .replace(/^\w/, c => c.toUpperCase());
+
+console.log("Hoy es:", hoyTexto);
+
 const contenedor = document.getElementById("calendario");
 
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7Zwum05QM61k6on31_lCsxA4UFWx6nvTiA1BfA1_loV1Mc0N6mHAxEYXjO_ukKSgw/pub?gid=0&single=true&output=csv";
@@ -69,3 +79,4 @@ fetch(CSV_URL)
     console.error("Error cargando CSV:", err);
     contenedor.innerHTML = "<p>Error cargando calendario</p>";
   });
+
