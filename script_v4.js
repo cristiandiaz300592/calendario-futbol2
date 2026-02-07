@@ -5,24 +5,35 @@ const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7
 fetch(CSV_URL)
   .then(res => res.text())
   .then(texto => {
-    const filas = texto.split("\n").slice(1);
+
+    console.log("CSV crudo:", texto.slice(0, 300));
+
+    const lineas = texto.trim().split("\n");
+    if (lineas.length <= 1) {
+      contenedor.innerHTML = "<p>No hay datos en la planilla</p>";
+      return;
+    }
+
+    // 👉 Detectar separador automáticamente
+    const separador = lineas[0].includes(";") ? ";" : ",";
+    console.log("Separador detectado:", separador);
+
+    const filas = lineas.slice(1);
     const fechas = {};
 
     filas.forEach(fila => {
       if (!fila.trim()) return;
 
-      // 👇 CLAVE: separador chileno
-      const columnas = fila.split(";");
+      const cols = fila.split(separador).map(c => c.replace(/"/g, "").trim());
 
-      const fecha = columnas[0]?.trim();
-      const partido = columnas[1]?.trim();
-      const hora = columnas[2]?.trim();
-      const canal = columnas[3]?.trim();
+      const fecha = cols[0];
+      const partido = cols[1];
+      const hora = cols[2];
+      const canal = cols[3];
 
       if (!fecha || !partido) return;
 
       if (!fechas[fecha]) fechas[fecha] = [];
-
       fechas[fecha].push({ partido, hora, canal });
     });
 
@@ -41,7 +52,10 @@ fetch(CSV_URL)
         div.className = "partido";
         div.innerHTML = `
           <div class="equipos">${p.partido}</div>
-          <div class="detalle">⏰ ${p.hora || ""} &nbsp; 📺 ${p.canal || ""}</div>
+          <div class="detalle">
+            ${p.hora ? "⏰ " + p.hora : ""}
+            ${p.canal ? "&nbsp; 📺 " + p.canal : ""}
+          </div>
         `;
         divFecha.appendChild(div);
       });
@@ -49,9 +63,9 @@ fetch(CSV_URL)
       contenedor.appendChild(divFecha);
     });
 
-    console.log("CSV cargado correctamente");
+    console.log("Calendario renderizado");
   })
-  .catch(err => console.error("Error:", err));
-
-
-
+  .catch(err => {
+    console.error("Error cargando CSV:", err);
+    contenedor.innerHTML = "<p>Error cargando calendario</p>";
+  });
