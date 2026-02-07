@@ -1,82 +1,55 @@
-// 📄 Google Sheets CSV publicado
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7Zwum05QM61k6on31_lCsxA4UFWx6nvTiA1BfA1_loV1Mc0N6mHAxEYXjO_ukKSgw/pub?gid=0&single=true&output=csv";
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7Zwum05QM61k6on31_lCsxA4UFWx6nvTiA1BfA1_loV1Mc0N6mHAxEYXjO_ukKSgw/pub?gid=0&single=true&output=csv&t=" + Date.now();
 
 const contenedor = document.getElementById("calendario");
 
-// Fecha de hoy en formato YYYY-MM-DD (local)
-const ahora = new Date();
-const hoy = 
-  ahora.getFullYear() + "-" +
-  String(ahora.getMonth() + 1).padStart(2, "0") + "-" +
-  String(ahora.getDate()).padStart(2, "0");
+const hoy = new Date();
+const hoyDia = hoy.getDate();
+const hoyMes = hoy.toLocaleString("es-CL", { month: "long" }).toLowerCase();
 
 fetch(CSV_URL)
   .then(res => res.text())
-  .then(texto => {
-    const filas = texto.trim().split("\n");
-    const datos = filas.slice(1); // quitar encabezados
+  .then(data => {
+    const filas = data.trim().split("\n").map(f => f.split(","));
+    const encabezados = filas.shift();
 
-    const dias = {};
+    const iFecha = encabezados.indexOf("Fecha");
+    const iEquipos = encabezados.indexOf("Equipos");
+    const iHora = encabezados.indexOf("Hora");
+    const iCanal = encabezados.indexOf("Canal");
 
-    datos.forEach(linea => {
-      if (!linea) return; // salto vacío
-      const columnas = linea.split(",");
+    const partidosPorDia = {};
 
-      const fechaTexto = columnas[0].trim();
-      const fechaISO = columnas[1].trim();
-      const equipos = columnas[2].trim();
-      const hora = columnas[3].trim();
-      const canal = columnas[4] ? columnas[4].trim() : "";
+    filas.forEach(fila => {
+      const fechaTexto = fila[iFecha].trim();
 
-      if (!dias[fechaISO]) {
-        dias[fechaISO] = {
-          fechaTexto,
-          fechaISO,
+      if (!partidosPorDia[fechaTexto]) {
+        partidosPorDia[fechaTexto] = {
+          fecha: fechaTexto,
           juegos: []
         };
       }
 
-      dias[fechaISO].juegos.push({
-        equipos,
-        hora,
-        canal
+      partidosPorDia[fechaTexto].juegos.push({
+        equipos: fila[iEquipos],
+        hora: fila[iHora],
+        canal: fila[iCanal]
       });
     });
 
-    // Ordenar días por fecha ISO
-    const diasOrdenados = Object.values(dias).sort((a, b) => {
-      return a.fechaISO.localeCompare(b.fechaISO);
-    });
-
-    diasOrdenados.forEach(dia => {
+    Object.values(partidosPorDia).forEach(dia => {
       const divFecha = document.createElement("div");
       divFecha.className = "fecha";
 
-      // 🟧 Resaltar si es HOY
-      if (dia.fechaISO === hoy) {
+      // 🔥 detectar HOY
+      const fechaLower = dia.fecha.toLowerCase();
+      if (fechaLower.includes(hoyDia) && fechaLower.includes(hoyMes)) {
         divFecha.classList.add("hoy");
       }
 
-      const titulo = document.createElement("h2");
-      titulo.textContent = "📅 " + dia.fechaTexto;
-      divFecha.appendChild(titulo);
+      const h2 = document.createElement("h2");
+      h2.textContent = "📅 " + dia.fecha;
+      divFecha.appendChild(h2);
 
-      dia.juegos.forEach(j => {
-        const divPartido = document.createElement("div");
-        divPartido.className = "partido";
+      dia.juegos.forEach(juego => {
+        const div =
 
-        divPartido.innerHTML = `
-          <div class="equipos">${j.equipos}</div>
-          <div class="detalle">⏰ ${j.hora} &nbsp;&nbsp; 📺 ${j.canal}</div>
-        `;
-
-        divFecha.appendChild(divPartido);
-      });
-
-      contenedor.appendChild(divFecha);
-    });
-  })
-  .catch(error => {
-    console.error("Error cargando calendario:", error);
-    contenedor.innerHTML = "<p>Error cargando el calendario.</p>";
-  });
