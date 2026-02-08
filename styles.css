@@ -46,6 +46,9 @@ main {
 .equipos {
   font-size: 20px;
   font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .detalle {
@@ -63,6 +66,32 @@ main {
 .fecha.hoy h2 {
   color: #ef6c00;
 }
+
+/* ============================= */
+/* 🏷️ ETIQUETA PRIMERA A / B */
+/* ============================= */
+
+.division {
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+/* Primera A */
+.division.a {
+  background-color: #1976d2;
+  color: #ffffff;
+}
+
+/* Primera B */
+.division.b {
+  background-color: #2e7d32;
+  color: #ffffff;
+}
+
+
 
 
 
