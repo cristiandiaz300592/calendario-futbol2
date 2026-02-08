@@ -8,13 +8,14 @@ const CSV_B = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7Zw
 const hoy = new Date();
 hoy.setHours(0,0,0,0);
 
-// Meses
+// 🗓️ Meses
 const meses = {
   enero:0, febrero:1, marzo:2, abril:3, mayo:4, junio:5,
   julio:6, agosto:7, septiembre:8, octubre:9, noviembre:10, diciembre:11
 };
 
-function cargarCSV(url) {
+// 📥 Cargar CSV con división
+function cargarCSV(url, division) {
   return fetch(url)
     .then(r => r.text())
     .then(texto => {
@@ -26,13 +27,17 @@ function cargarCSV(url) {
           fechaTexto: c[0],
           partido: c[1],
           hora: c[2],
-          canal: c[3]
+          canal: c[3],
+          division
         };
       });
     });
 }
 
-Promise.all([cargarCSV(CSV_A), cargarCSV(CSV_B)])
+Promise.all([
+  cargarCSV(CSV_A, "Primera A"),
+  cargarCSV(CSV_B, "Primera B")
+])
 .then(data => {
 
   const partidos = data.flat();
@@ -47,7 +52,7 @@ Promise.all([cargarCSV(CSV_A), cargarCSV(CSV_B)])
     const fechaObj = new Date(hoy.getFullYear(), mes, dia);
     fechaObj.setHours(0,0,0,0);
 
-    // ❌ No mostrar partidos pasados
+    // ❌ Ocultar partidos pasados
     if (fechaObj < hoy) return;
 
     if (!fechas[p.fechaTexto]) {
@@ -63,7 +68,7 @@ Promise.all([cargarCSV(CSV_A), cargarCSV(CSV_B)])
 
     const grupo = fechas[fechaTexto];
 
-    // 🔃 ORDENAR POR HORA
+    // 🔃 Ordenar por hora
     grupo.partidos.sort((a, b) => {
       if (!a.hora) return 1;
       if (!b.hora) return -1;
@@ -85,7 +90,12 @@ Promise.all([cargarCSV(CSV_A), cargarCSV(CSV_B)])
       const div = document.createElement("div");
       div.className = "partido";
       div.innerHTML = `
-        <div class="equipos">${p.partido}</div>
+        <div class="equipos">
+          ${p.partido}
+          <span class="division ${p.division === "Primera A" ? "a" : "b"}">
+            ${p.division}
+          </span>
+        </div>
         <div class="detalle">
           ${p.hora ? "⏰ " + p.hora : ""}
           ${p.canal ? " 📺 " + p.canal : ""}
@@ -97,7 +107,7 @@ Promise.all([cargarCSV(CSV_A), cargarCSV(CSV_B)])
     contenedor.appendChild(divFecha);
   });
 
-  console.log("Calendario ordenado por horario y unificado");
+  console.log("Calendario unificado, ordenado y con división");
 })
 .catch(err => {
   console.error(err);
