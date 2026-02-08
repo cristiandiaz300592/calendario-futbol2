@@ -1,3 +1,7 @@
+const CSV_A = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7Zwum05QM61k6on31_lCsxA4UFWx6nvTiA1BfA1_loV1Mc0N6mHAxEYXjO_ukKSgw/pub?gid=0&single=true&output=csv";
+
+const CSV_B = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7Zwum05QM61k6on31_lCsxA4UFWx6nvTiA1BfA1_loV1Mc0N6mHAxEYXjO_ukKSgw/pub?gid=356969972&single=true&output=csv";
+
 const contenedor = document.getElementById("calendario");
 
 // 👉 Fecha de hoy en el MISMO formato de la planilla
@@ -86,6 +90,7 @@ Promise.all([
   console.error("Error cargando calendarios:", err);
   contenedor.innerHTML = "<p>Error cargando el calendario</p>";
 });
+
 
 
 
