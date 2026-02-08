@@ -90,6 +90,29 @@ main {
   background-color: #2e7d32;
   color: #ffffff;
 }
+/* 🏷️ ETIQUETA DIVISIÓN */
+.division {
+  font-size: 12px;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-left: 8px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* 🔵 Primera A */
+.division.a {
+  background-color: #1976d2;
+  color: #ffffff;
+}
+
+/* 🟢 Primera B */
+.division.b {
+  background-color: #2e7d32;
+  color: #ffffff;
+}
+
 
 
 
