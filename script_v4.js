@@ -1,10 +1,10 @@
 const contenedor = document.getElementById("calendario");
 
-// 🔗 URLs CSV (una por hoja)
+// 🔗 URLs CSV
 const CSV_A = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7Zwum05QM61k6on31_lCsxA4UFWx6nvTiA1BfA1_loV1Mc0N6mHAxEYXjO_ukKSgw/pub?gid=0&single=true&output=csv";
 const CSV_B = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7Zwum05QM61k6on31_lCsxA4UFWx6nvTiA1BfA1_loV1Mc0N6mHAxEYXjO_ukKSgw/pub?gid=356969972&single=true&output=csv";
 
-// 📅 Fecha de hoy sin hora
+// 📅 Fecha de hoy
 const hoy = new Date();
 hoy.setHours(0,0,0,0);
 
@@ -14,7 +14,7 @@ const meses = {
   julio:6, agosto:7, septiembre:8, octubre:9, noviembre:10, diciembre:11
 };
 
-function cargarCSV(url, division) {
+function cargarCSV(url) {
   return fetch(url)
     .then(r => r.text())
     .then(texto => {
@@ -26,17 +26,14 @@ function cargarCSV(url, division) {
           fechaTexto: c[0],
           partido: c[1],
           hora: c[2],
-          canal: c[3],
-          division
+          canal: c[3]
         };
       });
     });
 }
 
-Promise.all([
-  cargarCSV(CSV_A, "Primera A"),
-  cargarCSV(CSV_B, "Primera B")
-]).then(data => {
+Promise.all([cargarCSV(CSV_A), cargarCSV(CSV_B)])
+.then(data => {
 
   const partidos = data.flat();
   const fechas = {};
@@ -63,10 +60,20 @@ Promise.all([
   contenedor.innerHTML = "";
 
   Object.keys(fechas).forEach(fechaTexto => {
+
+    const grupo = fechas[fechaTexto];
+
+    // 🔃 ORDENAR POR HORA
+    grupo.partidos.sort((a, b) => {
+      if (!a.hora) return 1;
+      if (!b.hora) return -1;
+      return a.hora.localeCompare(b.hora);
+    });
+
     const divFecha = document.createElement("div");
     divFecha.className = "fecha";
 
-    if (fechas[fechaTexto].fechaObj.getTime() === hoy.getTime()) {
+    if (grupo.fechaObj.getTime() === hoy.getTime()) {
       divFecha.classList.add("hoy");
     }
 
@@ -74,14 +81,13 @@ Promise.all([
     h2.textContent = "📅 " + fechaTexto;
     divFecha.appendChild(h2);
 
-    fechas[fechaTexto].partidos.forEach(p => {
+    grupo.partidos.forEach(p => {
       const div = document.createElement("div");
       div.className = "partido";
       div.innerHTML = `
         <div class="equipos">${p.partido}</div>
         <div class="detalle">
-          <span class="division">${p.division}</span>
-          ${p.hora ? " ⏰ " + p.hora : ""}
+          ${p.hora ? "⏰ " + p.hora : ""}
           ${p.canal ? " 📺 " + p.canal : ""}
         </div>
       `;
@@ -91,11 +97,12 @@ Promise.all([
     contenedor.appendChild(divFecha);
   });
 
-  console.log("Calendario Primera A + B cargado correctamente");
+  console.log("Calendario ordenado por horario y unificado");
 })
 .catch(err => {
   console.error(err);
   contenedor.innerHTML = "<p>Error cargando el calendario</p>";
 });
+
 
 
