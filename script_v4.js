@@ -1,10 +1,18 @@
+// ===============================
+// URLs Google Sheets (CSV)
+// ===============================
 const CSV_A = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7Zwum05QM61k6on31_lCsxA4UFWx6nvTiA1BfA1_loV1Mc0N6mHAxEYXjO_ukKSgw/pub?gid=0&single=true&output=csv";
 
 const CSV_B = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7Zwum05QM61k6on31_lCsxA4UFWx6nvTiA1BfA1_loV1Mc0N6mHAxEYXjO_ukKSgw/pub?gid=356969972&single=true&output=csv";
 
+// ===============================
+// Contenedor
+// ===============================
 const contenedor = document.getElementById("calendario");
 
-// 👉 Fecha de hoy en el MISMO formato de la planilla
+// ===============================
+// Fecha de hoy (mismo formato planilla)
+// ===============================
 const hoy = new Date();
 const opciones = { weekday: "long", day: "numeric", month: "long" };
 const hoyTexto = hoy
@@ -12,11 +20,16 @@ const hoyTexto = hoy
   .replace(",", "")
   .replace(/^\w/, c => c.toUpperCase());
 
+// ===============================
+// Cargar división desde CSV
+// ===============================
 function cargarDivision(url, nombreDivision) {
   return fetch(url)
     .then(res => res.text())
     .then(texto => {
       const lineas = texto.trim().split("\n");
+      if (lineas.length <= 1) return { nombreDivision, fechas: {} };
+
       const separador = lineas[0].includes(";") ? ";" : ",";
       const filas = lineas.slice(1);
       const fechas = {};
@@ -43,13 +56,18 @@ function cargarDivision(url, nombreDivision) {
     });
 }
 
+// ===============================
+// Cargar Primera A + Primera B
+// ===============================
 Promise.all([
   cargarDivision(CSV_A, "Primera A"),
   cargarDivision(CSV_B, "Primera B")
-]).then(divisiones => {
+])
+.then(divisiones => {
   contenedor.innerHTML = "";
 
   divisiones.forEach(div => {
+    // Título división
     const titulo = document.createElement("h1");
     titulo.textContent = div.nombreDivision;
     titulo.style.marginTop = "32px";
@@ -59,7 +77,7 @@ Promise.all([
       const divFecha = document.createElement("div");
       divFecha.className = "fecha";
 
-      // 🔶 Destacar día de hoy
+      // 🔶 Destacar HOY
       if (fecha === hoyTexto) {
         divFecha.classList.add("hoy");
       }
@@ -85,12 +103,11 @@ Promise.all([
     });
   });
 
-  console.log("Calendario Primera A + Primera B cargado");
-}).catch(err => {
+  console.log("Calendario Primera A + Primera B cargado correctamente");
+})
+.catch(err => {
   console.error("Error cargando calendarios:", err);
   contenedor.innerHTML = "<p>Error cargando el calendario</p>";
 });
-
-
 
 
