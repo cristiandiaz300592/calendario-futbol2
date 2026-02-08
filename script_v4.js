@@ -1,113 +1,91 @@
-// ===============================
-// URLs Google Sheets (CSV)
-// ===============================
-const CSV_A = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7Zwum05QM61k6on31_lCsxA4UFWx6nvTiA1BfA1_loV1Mc0N6mHAxEYXjO_ukKSgw/pub?gid=0&single=true&output=csv";
-
-const CSV_B = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7Zwum05QM61k6on31_lCsxA4UFWx6nvTiA1BfA1_loV1Mc0N6mHAxEYXjO_ukKSgw/pub?gid=356969972&single=true&output=csv";
-
-// ===============================
-// Contenedor
-// ===============================
 const contenedor = document.getElementById("calendario");
 
-// ===============================
-// Fecha de hoy (mismo formato planilla)
-// ===============================
+// URL CSV publicada de Google Sheets
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7Zwum05QM61k6on31_lCsxA4UFWx6nvTiA1BfA1_loV1Mc0N6mHAxEYXjO_ukKSgw/pub?gid=0&single=true&output=csv";
+
+// Fecha de hoy sin hora
 const hoy = new Date();
-const opciones = { weekday: "long", day: "numeric", month: "long" };
-const hoyTexto = hoy
-  .toLocaleDateString("es-CL", opciones)
-  .replace(",", "")
-  .replace(/^\w/, c => c.toUpperCase());
+hoy.setHours(0,0,0,0);
 
-// ===============================
-// Cargar división desde CSV
-// ===============================
-function cargarDivision(url, nombreDivision) {
-  return fetch(url)
-    .then(res => res.text())
-    .then(texto => {
-      const lineas = texto.trim().split("\n");
-      if (lineas.length <= 1) return { nombreDivision, fechas: {} };
+fetch(CSV_URL)
+  .then(res => res.text())
+  .then(texto => {
 
-      const separador = lineas[0].includes(";") ? ";" : ",";
-      const filas = lineas.slice(1);
-      const fechas = {};
+    const lineas = texto.trim().split("\n");
+    if (lineas.length <= 1) {
+      contenedor.innerHTML = "<p>No hay datos en la planilla</p>";
+      return;
+    }
 
-      filas.forEach(fila => {
-        if (!fila.trim()) return;
+    const separador = lineas[0].includes(";") ? ";" : ",";
+    const filas = lineas.slice(1);
+    const fechas = {};
 
-        const cols = fila
-          .split(separador)
-          .map(c => c.replace(/"/g, "").trim());
+    const meses = {
+      enero:0, febrero:1, marzo:2, abril:3, mayo:4, junio:5,
+      julio:6, agosto:7, septiembre:8, octubre:9, noviembre:10, diciembre:11
+    };
 
-        const fecha = cols[0];
-        const partido = cols[1];
-        const hora = cols[2];
-        const canal = cols[3];
+    filas.forEach(fila => {
+      if (!fila.trim()) return;
 
-        if (!fecha || !partido) return;
+      const cols = fila.split(separador).map(c => c.replace(/"/g, "").trim());
+      const fechaTexto = cols[0];
+      const partido = cols[1];
+      const hora = cols[2];
+      const canal = cols[3];
 
-        if (!fechas[fecha]) fechas[fecha] = [];
-        fechas[fecha].push({ partido, hora, canal });
-      });
+      if (!fechaTexto || !partido) return;
 
-      return { nombreDivision, fechas };
+      // Parsear la fecha de la planilla
+      const partes = fechaTexto.toLowerCase().split(" "); // ej: ["sábado", "7", "de", "febrero"]
+      const dia = parseInt(partes[1]);
+      const mes = meses[partes[3]];
+      const anio = hoy.getFullYear(); // asumimos este año
+      const fechaObj = new Date(anio, mes, dia);
+      fechaObj.setHours(0,0,0,0);
+
+      // Filtrar partidos pasados
+      if (fechaObj < hoy) return;
+
+      if (!fechas[fechaTexto]) fechas[fechaTexto] = [];
+      fechas[fechaTexto].push({ partido, hora, canal, fechaObj });
     });
-}
 
-// ===============================
-// Cargar Primera A + Primera B
-// ===============================
-Promise.all([
-  cargarDivision(CSV_A, "Primera A"),
-  cargarDivision(CSV_B, "Primera B")
-])
-.then(divisiones => {
-  contenedor.innerHTML = "";
+    contenedor.innerHTML = "";
 
-  divisiones.forEach(div => {
-    // Título división
-    const titulo = document.createElement("h1");
-    titulo.textContent = div.nombreDivision;
-    titulo.style.marginTop = "32px";
-    contenedor.appendChild(titulo);
-
-    Object.keys(div.fechas).forEach(fecha => {
+    Object.keys(fechas).forEach(fechaTexto => {
       const divFecha = document.createElement("div");
       divFecha.className = "fecha";
 
-      // 🔶 Destacar HOY
-      if (fecha === hoyTexto) {
-        divFecha.classList.add("hoy");
-      }
+      const esHoy = fechas[fechaTexto][0].fechaObj.getTime() === hoy.getTime();
+      if (esHoy) divFecha.classList.add("hoy");
 
       const h2 = document.createElement("h2");
-      h2.textContent = "📅 " + fecha;
+      h2.textContent = "📅 " + fechaTexto;
       divFecha.appendChild(h2);
 
-      div.fechas[fecha].forEach(p => {
-        const divPartido = document.createElement("div");
-        divPartido.className = "partido";
-        divPartido.innerHTML = `
+      fechas[fechaTexto].forEach(p => {
+        const div = document.createElement("div");
+        div.className = "partido";
+        div.innerHTML = `
           <div class="equipos">${p.partido}</div>
           <div class="detalle">
             ${p.hora ? "⏰ " + p.hora : ""}
-            ${p.canal ? " 📺 " + p.canal : ""}
+            ${p.canal ? "&nbsp; 📺 " + p.canal : ""}
           </div>
         `;
-        divFecha.appendChild(divPartido);
+        divFecha.appendChild(div);
       });
 
       contenedor.appendChild(divFecha);
     });
-  });
 
-  console.log("Calendario Primera A + Primera B cargado correctamente");
-})
-.catch(err => {
-  console.error("Error cargando calendarios:", err);
-  contenedor.innerHTML = "<p>Error cargando el calendario</p>";
-});
+    console.log("Calendario actualizado solo con partidos futuros");
+  })
+  .catch(err => {
+    console.error("Error cargando CSV:", err);
+    contenedor.innerHTML = "<p>Error cargando calendario</p>";
+  });
 
 
