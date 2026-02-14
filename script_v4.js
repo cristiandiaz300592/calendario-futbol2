@@ -7,7 +7,7 @@ const CSV_INT = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7
 
 // 📅 Fecha de hoy
 const hoy = new Date();
-hoy.setHours(0,0,0,0);
+hoy.setHours(0, 0, 0, 0);
 
 // 🗓️ Meses
 const meses = {
@@ -23,16 +23,15 @@ function cargarCSV(url, division) {
       const lineas = texto.trim().split("\n");
       const sep = lineas[0].includes(";") ? ";" : ",";
       return lineas.slice(1).map(fila => {
-        const c = fila.split(sep).map(x => x.replace(/"/g,"").trim());
+        const c = fila.split(sep).map(x => x.replace(/"/g, "").trim());
         return {
-  fechaTexto: c[0],
-  partido: c[1],
-  hora: c[2],
-  canal: c[3],
-  liga: c[4] ? c[4].trim() : "",
-  division
-};
-        
+          fechaTexto: c[0],
+          partido: c[1],
+          hora: c[2],
+          canal: c[3],
+          liga: c[4] ? c[4].trim() : "",
+          division
+        };
       });
     });
 }
@@ -55,7 +54,7 @@ Promise.all([
     const dia = parseInt(partes[1]);
     const mes = meses[partes[3]];
     const fechaObj = new Date(hoy.getFullYear(), mes, dia);
-    fechaObj.setHours(0,0,0,0);
+    fechaObj.setHours(0, 0, 0, 0);
 
     if (fechaObj < hoy) return;
 
@@ -68,14 +67,14 @@ Promise.all([
 
   contenedor.innerHTML = "";
 
-  // ✅ AQUÍ ESTÁ LA CORRECCIÓN
+  // 🔃 Ordenar fechas correctamente
   Object.keys(fechas)
     .sort((a, b) => fechas[a].fechaObj - fechas[b].fechaObj)
     .forEach(fechaTexto => {
 
       const grupo = fechas[fechaTexto];
 
-      // 🔃 Ordenar por hora
+      // 🔃 Ordenar partidos por hora
       grupo.partidos.sort((a, b) => {
         if (!a.hora) return 1;
         if (!b.hora) return -1;
@@ -94,41 +93,39 @@ Promise.all([
       divFecha.appendChild(h2);
 
       grupo.partidos.forEach(p => {
+
         const div = document.createElement("div");
         div.className = "partido";
+
         div.innerHTML = `
-          div.innerHTML = `
-  <div class="equipos">
-    ${p.partido}
-    <span class="division ${p.division === "Primera A" ? "a" : p.division === "Primera B" ? "b" : "int"}">
-      ${p.division}
-    </span>
-  </div>
+          <div class="equipos">
+            ${p.partido}
+            <span class="division ${p.division === "Primera A" ? "a" : p.division === "Primera B" ? "b" : "int"}">
+              ${p.division}
+            </span>
+          </div>
 
-  ${p.liga ? `<div class="liga">🏆 ${p.liga}</div>` : ""}
+          ${p.liga ? `<div class="liga">🏆 ${p.liga}</div>` : ""}
 
-  <div class="detalle">
-    ${p.hora ? "⏰ " + p.hora : ""}
-    ${p.canal ? " 📺 " + p.canal : ""}
-  </div>
-`;
+          <div class="detalle">
+            ${p.hora ? "⏰ " + p.hora : ""}
+            ${p.canal ? " 📺 " + p.canal : ""}
+          </div>
+        `;
 
-      
         divFecha.appendChild(div);
       });
 
       contenedor.appendChild(divFecha);
     });
 
-  console.log("Calendario unificado y correctamente ordenado por fecha");
+  console.log("Calendario unificado, ordenado y con liga incluida");
 })
+
 .catch(err => {
   console.error(err);
   contenedor.innerHTML = "<p>Error cargando el calendario</p>";
 });
-
-
-
 
 
 
