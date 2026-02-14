@@ -55,7 +55,6 @@ Promise.all([
     const fechaObj = new Date(hoy.getFullYear(), mes, dia);
     fechaObj.setHours(0,0,0,0);
 
-    // ❌ Ocultar partidos pasados
     if (fechaObj < hoy) return;
 
     if (!fechas[p.fechaTexto]) {
@@ -67,55 +66,59 @@ Promise.all([
 
   contenedor.innerHTML = "";
 
-  Object.keys(fechas).forEach(fechaTexto => {
+  // ✅ AQUÍ ESTÁ LA CORRECCIÓN
+  Object.keys(fechas)
+    .sort((a, b) => fechas[a].fechaObj - fechas[b].fechaObj)
+    .forEach(fechaTexto => {
 
-    const grupo = fechas[fechaTexto];
+      const grupo = fechas[fechaTexto];
 
-    // 🔃 Ordenar por hora
-    grupo.partidos.sort((a, b) => {
-      if (!a.hora) return 1;
-      if (!b.hora) return -1;
-      return a.hora.localeCompare(b.hora);
+      // 🔃 Ordenar por hora
+      grupo.partidos.sort((a, b) => {
+        if (!a.hora) return 1;
+        if (!b.hora) return -1;
+        return a.hora.localeCompare(b.hora);
+      });
+
+      const divFecha = document.createElement("div");
+      divFecha.className = "fecha";
+
+      if (grupo.fechaObj.getTime() === hoy.getTime()) {
+        divFecha.classList.add("hoy");
+      }
+
+      const h2 = document.createElement("h2");
+      h2.textContent = "📅 " + fechaTexto;
+      divFecha.appendChild(h2);
+
+      grupo.partidos.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "partido";
+        div.innerHTML = `
+          <div class="equipos">
+            ${p.partido}
+            <span class="division ${p.division === "Primera A" ? "a" : p.division === "Primera B" ? "b" : "int"}">
+              ${p.division}
+            </span>
+          </div>
+          <div class="detalle">
+            ${p.hora ? "⏰ " + p.hora : ""}
+            ${p.canal ? " 📺 " + p.canal : ""}
+          </div>
+        `;
+        divFecha.appendChild(div);
+      });
+
+      contenedor.appendChild(divFecha);
     });
 
-    const divFecha = document.createElement("div");
-    divFecha.className = "fecha";
-
-    if (grupo.fechaObj.getTime() === hoy.getTime()) {
-      divFecha.classList.add("hoy");
-    }
-
-    const h2 = document.createElement("h2");
-    h2.textContent = "📅 " + fechaTexto;
-    divFecha.appendChild(h2);
-
-    grupo.partidos.forEach(p => {
-      const div = document.createElement("div");
-      div.className = "partido";
-      div.innerHTML = `
-        <div class="equipos">
-          ${p.partido}
-          <span class="division ${p.division === "Primera A" ? "a" : "b"}">
-            ${p.division}
-          </span>
-        </div>
-        <div class="detalle">
-          ${p.hora ? "⏰ " + p.hora : ""}
-          ${p.canal ? " 📺 " + p.canal : ""}
-        </div>
-      `;
-      divFecha.appendChild(div);
-    });
-
-    contenedor.appendChild(divFecha);
-  });
-
-  console.log("Calendario unificado, ordenado y con división");
+  console.log("Calendario unificado y correctamente ordenado por fecha");
 })
 .catch(err => {
   console.error(err);
   contenedor.innerHTML = "<p>Error cargando el calendario</p>";
 });
+
 
 
 
