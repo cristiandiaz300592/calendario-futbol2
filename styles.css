@@ -68,49 +68,34 @@ main {
 }
 
 /* ============================= */
-/* 🏷️ ETIQUETA PRIMERA A / B */
+/* 🏷️ ETIQUETAS DE DIVISIÓN */
 /* ============================= */
 
 .division {
   font-size: 12px;
-  padding: 3px 10px;
+  font-weight: bold;
+  padding: 4px 10px;
   border-radius: 999px;
-  font-weight: bold;
-  white-space: nowrap;
-}
-
-/* Primera A */
-.division.a {
-  background-color: #1976d2;
-  color: #ffffff;
-}
-
-/* Primera B */
-.division.b {
-  background-color: #2e7d32;
-  color: #ffffff;
-}
-/* 🏷️ ETIQUETA DIVISIÓN */
-.division {
-  font-size: 12px;
-  font-weight: bold;
-  padding: 3px 8px;
-  border-radius: 6px;
   margin-left: 8px;
   display: inline-block;
   vertical-align: middle;
+  color: #ffffff;
+  white-space: nowrap;
 }
 
 /* 🔵 Primera A */
 .division.a {
   background-color: #1976d2;
-  color: #ffffff;
 }
 
 /* 🟢 Primera B */
 .division.b {
   background-color: #2e7d32;
-  color: #ffffff;
+}
+
+/* 🔴 Internacional */
+.division.int {
+  background-color: #c62828;
 }
 
 
