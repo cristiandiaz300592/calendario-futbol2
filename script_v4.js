@@ -25,12 +25,14 @@ function cargarCSV(url, division) {
       return lineas.slice(1).map(fila => {
         const c = fila.split(sep).map(x => x.replace(/"/g,"").trim());
         return {
-          fechaTexto: c[0],
-          partido: c[1],
-          hora: c[2],
-          canal: c[3],
-          division
-        };
+  fechaTexto: c[0],
+  partido: c[1],
+  hora: c[2],
+  canal: c[3],
+  liga: c[4] ? c[4].trim() : "",
+  division
+};
+        
       });
     });
 }
@@ -95,17 +97,23 @@ Promise.all([
         const div = document.createElement("div");
         div.className = "partido";
         div.innerHTML = `
-          <div class="equipos">
-            ${p.partido}
-            <span class="division ${p.division === "Primera A" ? "a" : p.division === "Primera B" ? "b" : "int"}">
-              ${p.division}
-            </span>
-          </div>
-          <div class="detalle">
-            ${p.hora ? "⏰ " + p.hora : ""}
-            ${p.canal ? " 📺 " + p.canal : ""}
-          </div>
-        `;
+          div.innerHTML = `
+  <div class="equipos">
+    ${p.partido}
+    <span class="division ${p.division === "Primera A" ? "a" : p.division === "Primera B" ? "b" : "int"}">
+      ${p.division}
+    </span>
+  </div>
+
+  ${p.liga ? `<div class="liga">🏆 ${p.liga}</div>` : ""}
+
+  <div class="detalle">
+    ${p.hora ? "⏰ " + p.hora : ""}
+    ${p.canal ? " 📺 " + p.canal : ""}
+  </div>
+`;
+
+      
         divFecha.appendChild(div);
       });
 
@@ -118,6 +126,7 @@ Promise.all([
   console.error(err);
   contenedor.innerHTML = "<p>Error cargando el calendario</p>";
 });
+
 
 
 
