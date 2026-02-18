@@ -8,6 +8,9 @@ const CSV_INT = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7
 // 📅 Fecha de hoy
 const hoy = new Date();
 hoy.setHours(0, 0, 0, 0);
+const limite = new Date(hoy);
+limite.setDate(hoy.getDate() + 3);
+limite.setHours(23, 59, 59, 999);
 
 // 🗓️ Meses
 const meses = {
@@ -56,7 +59,7 @@ Promise.all([
     const fechaObj = new Date(hoy.getFullYear(), mes, dia);
     fechaObj.setHours(0, 0, 0, 0);
 
-    if (fechaObj < hoy) return;
+    if (fechaObj < hoy || fechaObj > limite) return;
 
     if (!fechas[p.fechaTexto]) {
       fechas[p.fechaTexto] = { fechaObj, partidos: [] };
@@ -126,6 +129,7 @@ Promise.all([
   console.error(err);
   contenedor.innerHTML = "<p>Error cargando el calendario</p>";
 });
+
 
 
 
