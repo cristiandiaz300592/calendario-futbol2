@@ -8,6 +8,8 @@ const CSV_INT = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7
 // 📅 Fecha de hoy
 const hoy = new Date();
 hoy.setHours(0, 0, 0, 0);
+
+// 📅 Mostrar solo próximos 3 días
 const limite = new Date(hoy);
 limite.setDate(hoy.getDate() + 3);
 limite.setHours(23, 59, 59, 999);
@@ -18,7 +20,20 @@ const meses = {
   julio:6, agosto:7, septiembre:8, octubre:9, noviembre:10, diciembre:11
 };
 
-// 📥 Cargar CSV con división
+// 🎨 Detectar clase por liga
+function obtenerClaseLiga(nombre) {
+  const liga = nombre.toLowerCase();
+
+  if (liga.includes("champions")) return "champions";
+  if (liga.includes("libertadores")) return "libertadores";
+  if (liga.includes("premier")) return "premier";
+  if (liga.includes("la liga")) return "laliga";
+  if (liga.includes("serie a")) return "seriea";
+
+  return "default";
+}
+
+// 📥 Cargar CSV
 function cargarCSV(url, division) {
   return fetch(url)
     .then(r => r.text())
@@ -61,23 +76,28 @@ Promise.all([
 
     if (fechaObj < hoy || fechaObj > limite) return;
 
-    if (!fechas[p.fechaTexto]) {
-      fechas[p.fechaTexto] = { fechaObj, partidos: [] };
+    const clave = fechaObj.getTime(); // 🔥 clave real por timestamp
+
+    if (!fechas[clave]) {
+      fechas[clave] = {
+        fechaObj,
+        fechaTexto: p.fechaTexto.trim(),
+        partidos: []
+      };
     }
 
-    fechas[p.fechaTexto].partidos.push(p);
+    fechas[clave].partidos.push(p);
   });
 
   contenedor.innerHTML = "";
 
-  // 🔃 Ordenar fechas correctamente
   Object.keys(fechas)
     .sort((a, b) => fechas[a].fechaObj - fechas[b].fechaObj)
-    .forEach(fechaTexto => {
+    .forEach(clave => {
 
-      const grupo = fechas[fechaTexto];
+      const grupo = fechas[clave];
 
-      // 🔃 Ordenar partidos por hora
+      // 🔃 Ordenar por hora
       grupo.partidos.sort((a, b) => {
         if (!a.hora) return 1;
         if (!b.hora) return -1;
@@ -92,7 +112,7 @@ Promise.all([
       }
 
       const h2 = document.createElement("h2");
-      h2.textContent = "📅 " + fechaTexto;
+      h2.textContent = "📅 " + grupo.fechaTexto;
       divFecha.appendChild(h2);
 
       grupo.partidos.forEach(p => {
@@ -108,7 +128,7 @@ Promise.all([
             </span>
           </div>
 
-          ${p.liga ? `<div class="liga">🏆 ${p.liga}</div>` : ""}
+          ${p.liga ? `<div class="liga ${obtenerClaseLiga(p.liga)}">🏆 ${p.liga}</div>` : ""}
 
           <div class="detalle">
             ${p.hora ? "⏰ " + p.hora : ""}
@@ -122,14 +142,13 @@ Promise.all([
       contenedor.appendChild(divFecha);
     });
 
-  console.log("Calendario unificado, ordenado y con liga incluida");
+  console.log("Calendario robusto, agrupado correctamente y filtrado a 3 días");
 })
 
 .catch(err => {
   console.error(err);
   contenedor.innerHTML = "<p>Error cargando el calendario</p>";
 });
-
 
 
 
