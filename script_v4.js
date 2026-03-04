@@ -8,6 +8,8 @@ const CSV_INT = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7
 // 📅 Fecha de hoy
 const hoy = new Date();
 hoy.setHours(0, 0, 0, 0);
+const manana = new Date(hoy);
+manana.setDate(hoy.getDate() + 1);
 
 // 📅 Mostrar solo próximos 3 días
 const limite = new Date(hoy);
@@ -149,6 +151,7 @@ Promise.all([
   console.error(err);
   contenedor.innerHTML = "<p>Error cargando el calendario</p>";
 });
+
 
 
 
