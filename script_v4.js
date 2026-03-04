@@ -11,11 +11,11 @@ hoy.setHours(0, 0, 0, 0);
 
 // 📅 Mañana
 const manana = new Date(hoy);
-manana.setDate(hoy.getDate() + 2);
+manana.setDate(hoy.getDate() + 1);
 
 // 📅 Mostrar solo hoy y mañana
 const limite = new Date(hoy);
-limite.setDate(hoy.getDate() + 1);
+limite.setDate(hoy.getDate() + 2);
 limite.setHours(23, 59, 59, 999);
 
 // 🗓️ Meses
@@ -163,4 +163,5 @@ Promise.all([
   console.error(err);
   contenedor.innerHTML = "<p>Error cargando el calendario</p>";
 });
+
 
