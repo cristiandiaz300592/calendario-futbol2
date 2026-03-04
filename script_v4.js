@@ -114,9 +114,15 @@ Promise.all([
       }
 
       const h2 = document.createElement("h2");
-      h2.textContent = "📅 " + grupo.fechaTexto;
-      divFecha.appendChild(h2);
-
+     if (grupo.fechaObj.getTime() === hoy.getTime()) {
+  h2.textContent = "🔥 HOY";
+} 
+else if (grupo.fechaObj.getTime() === manana.getTime()) {
+  h2.textContent = "⏳ MAÑANA";
+} 
+else {
+  h2.textContent = "📅 " + grupo.fechaTexto;
+}
       grupo.partidos.forEach(p => {
 
         const div = document.createElement("div");
@@ -151,6 +157,7 @@ Promise.all([
   console.error(err);
   contenedor.innerHTML = "<p>Error cargando el calendario</p>";
 });
+
 
 
 
