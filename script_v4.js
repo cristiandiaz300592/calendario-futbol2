@@ -8,12 +8,14 @@ const CSV_INT = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTSwAjG8iObcMS7
 // 📅 Fecha de hoy
 const hoy = new Date();
 hoy.setHours(0, 0, 0, 0);
+
+// 📅 Mañana
 const manana = new Date(hoy);
 manana.setDate(hoy.getDate() + 1);
 
-// 📅 Mostrar solo próximos 3 días
+// 📅 Mostrar solo hoy y mañana
 const limite = new Date(hoy);
-limite.setDate(hoy.getDate() + 2);
+limite.setDate(hoy.getDate() + 1);
 limite.setHours(23, 59, 59, 999);
 
 // 🗓️ Meses
@@ -78,7 +80,7 @@ Promise.all([
 
     if (fechaObj < hoy || fechaObj > limite) return;
 
-    const clave = fechaObj.getTime(); // 🔥 clave real por timestamp
+    const clave = fechaObj.getTime();
 
     if (!fechas[clave]) {
       fechas[clave] = {
@@ -114,15 +116,19 @@ Promise.all([
       }
 
       const h2 = document.createElement("h2");
-     if (grupo.fechaObj.getTime() === hoy.getTime()) {
-  h2.textContent = "🔥 HOY";
-} 
-else if (grupo.fechaObj.getTime() === manana.getTime()) {
-  h2.textContent = "⏳ MAÑANA";
-} 
-else {
-  h2.textContent = "📅 " + grupo.fechaTexto;
-}
+
+      if (grupo.fechaObj.getTime() === hoy.getTime()) {
+        h2.textContent = "🔥 HOY";
+      } 
+      else if (grupo.fechaObj.getTime() === manana.getTime()) {
+        h2.textContent = "⏳ MAÑANA";
+      } 
+      else {
+        h2.textContent = "📅 " + grupo.fechaTexto;
+      }
+
+      divFecha.appendChild(h2);
+
       grupo.partidos.forEach(p => {
 
         const div = document.createElement("div");
@@ -150,17 +156,10 @@ else {
       contenedor.appendChild(divFecha);
     });
 
-  console.log("Calendario robusto, agrupado correctamente y filtrado a 3 días");
+  console.log("Calendario funcionando con HOY y MAÑANA");
 })
 
 .catch(err => {
   console.error(err);
   contenedor.innerHTML = "<p>Error cargando el calendario</p>";
 });
-
-
-
-
-
-
-
