@@ -24,7 +24,6 @@ const meses = {
   julio:6, agosto:7, septiembre:8, octubre:9, noviembre:10, diciembre:11
 };
 
-// 🎨 Detectar clase por liga
 function obtenerClaseLiga(nombre) {
   const liga = nombre.toLowerCase();
   if (liga.includes("champions")) return "champions";
@@ -35,7 +34,6 @@ function obtenerClaseLiga(nombre) {
   return "default";
 }
 
-// 📥 Cargar CSV
 function cargarCSV(url, division) {
   return fetch(url)
     .then(r => r.text())
@@ -128,7 +126,12 @@ Promise.all([
 
       grupo.partidos.forEach(p => {
 
-        // ⏰ Ocultar partidos 2 horas después de iniciados (solo si son de hoy)
+        const div = document.createElement("div");
+        div.className = "partido";
+
+        let horaLimite = null;
+
+        // ⏰ Calcular límite (inicio + 2h) si es hoy
         if (grupo.fechaObj.getTime() === hoy.getTime() && p.hora) {
 
           const [horaPartido, minutoPartido] = p.hora.split(":").map(Number);
@@ -138,15 +141,14 @@ Promise.all([
 
           fechaPartido.setHours(fechaPartido.getHours() + 2);
 
-          const ahora = new Date();
+          horaLimite = fechaPartido.getTime();
 
-          if (ahora > fechaPartido) {
+          if (Date.now() > horaLimite) {
             return;
           }
-        }
 
-        const div = document.createElement("div");
-        div.className = "partido";
+          div.dataset.limite = horaLimite;
+        }
 
         div.innerHTML = `
           <div class="equipos">
@@ -170,11 +172,33 @@ Promise.all([
       contenedor.appendChild(divFecha);
     });
 
+  // 🔄 Eliminación automática sin refrescar
+  setInterval(() => {
+
+    document.querySelectorAll(".partido").forEach(partido => {
+
+      const limite = partido.dataset.limite;
+
+      if (limite && Date.now() > Number(limite)) {
+        partido.remove();
+      }
+
+    });
+
+    // Si un día queda vacío, se elimina el bloque
+    document.querySelectorAll(".fecha").forEach(fecha => {
+      if (fecha.querySelectorAll(".partido").length === 0) {
+        fecha.remove();
+      }
+    });
+
+  }, 60000);
+
   console.log("Calendario funcionando con eliminación automática +2 horas");
+
 })
 
 .catch(err => {
   console.error(err);
   contenedor.innerHTML = "<p>Error cargando el calendario</p>";
 });
-
