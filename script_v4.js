@@ -11,7 +11,7 @@ hoy.setHours(0, 0, 0, 0);
 
 // 📅 Mostrar solo próximos 3 días
 const limite = new Date(hoy);
-limite.setDate(hoy.getDate() + 3);
+limite.setDate(hoy.getDate() + 2);
 limite.setHours(23, 59, 59, 999);
 
 // 🗓️ Meses
@@ -149,6 +149,7 @@ Promise.all([
   console.error(err);
   contenedor.innerHTML = "<p>Error cargando el calendario</p>";
 });
+
 
 
 
