@@ -13,7 +13,7 @@ hoy.setHours(0, 0, 0, 0);
 const manana = new Date(hoy);
 manana.setDate(hoy.getDate() + 1);
 
-// 📅 Mostrar solo hoy y mañana
+// 📅 Mostrar hasta 2 días hacia adelante
 const limite = new Date(hoy);
 limite.setDate(hoy.getDate() + 2);
 limite.setHours(23, 59, 59, 999);
@@ -27,13 +27,11 @@ const meses = {
 // 🎨 Detectar clase por liga
 function obtenerClaseLiga(nombre) {
   const liga = nombre.toLowerCase();
-
   if (liga.includes("champions")) return "champions";
   if (liga.includes("libertadores")) return "libertadores";
   if (liga.includes("premier")) return "premier";
   if (liga.includes("la liga")) return "laliga";
   if (liga.includes("serie a")) return "seriea";
-
   return "default";
 }
 
@@ -101,7 +99,6 @@ Promise.all([
 
       const grupo = fechas[clave];
 
-      // 🔃 Ordenar por hora
       grupo.partidos.sort((a, b) => {
         if (!a.hora) return 1;
         if (!b.hora) return -1;
@@ -131,6 +128,23 @@ Promise.all([
 
       grupo.partidos.forEach(p => {
 
+        // ⏰ Ocultar partidos 2 horas después de iniciados (solo si son de hoy)
+        if (grupo.fechaObj.getTime() === hoy.getTime() && p.hora) {
+
+          const [horaPartido, minutoPartido] = p.hora.split(":").map(Number);
+
+          const fechaPartido = new Date(grupo.fechaObj);
+          fechaPartido.setHours(horaPartido, minutoPartido, 0, 0);
+
+          fechaPartido.setHours(fechaPartido.getHours() + 2);
+
+          const ahora = new Date();
+
+          if (ahora > fechaPartido) {
+            return;
+          }
+        }
+
         const div = document.createElement("div");
         div.className = "partido";
 
@@ -156,12 +170,11 @@ Promise.all([
       contenedor.appendChild(divFecha);
     });
 
-  console.log("Calendario funcionando con HOY y MAÑANA");
+  console.log("Calendario funcionando con eliminación automática +2 horas");
 })
 
 .catch(err => {
   console.error(err);
   contenedor.innerHTML = "<p>Error cargando el calendario</p>";
 });
-
 
