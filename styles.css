@@ -5,11 +5,14 @@ body {
   color: #000000;
 }
 
+/* 🔷 HEADER */
+
 header {
   background-color: #0b3c5d;
   color: white;
   padding: 16px;
   text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
 header h1 {
@@ -22,26 +25,48 @@ header p {
   margin: 4px 0 0 0;
 }
 
+/* 🔷 CONTENIDO */
+
 main {
   padding: 16px;
+  max-width: 750px;
+  margin: auto;
 }
 
+/* 🔷 BLOQUES DE FECHA */
+
 .fecha {
-  margin-top: 24px;
+  margin-top: 28px;
 }
 
 .fecha h2 {
   font-size: 22px;
   border-bottom: 2px solid #ddd;
   padding-bottom: 6px;
+  margin-bottom: 14px;
 }
 
+/* 🔷 TARJETAS DE PARTIDO (MEJORADAS) */
+
 .partido {
-  margin-top: 14px;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  margin-top: 12px;
+  padding: 14px 16px;
+
+  background: #ffffff;
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
+
+.partido:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+
+/* 🔷 EQUIPOS */
 
 .equipos {
   font-size: 20px;
@@ -51,18 +76,23 @@ main {
   gap: 10px;
 }
 
+/* 🔷 DETALLE (hora y canal) */
+
 .detalle {
-  font-size: 18px;
+  font-size: 16px;
   margin-top: 6px;
+  color: #555;
 }
 
 /* 🔶 DESTACADO DEL DÍA DE HOY */
+
 .fecha.hoy {
   border-left: 6px solid #ef6c00;
   padding-left: 12px;
 }
 
 /* 📅 Color del título de hoy */
+
 .fecha.hoy h2 {
   color: #ef6c00;
 }
@@ -84,25 +114,30 @@ main {
 }
 
 /* 🔵 Primera A */
+
 .division.a {
   background-color: #1976d2;
 }
 
 /* 🟢 Primera B */
+
 .division.b {
   background-color: #2e7d32;
 }
 
 /* 🔴 Internacional */
+
 .division.int {
   background-color: #c62828;
 }
+
+/* 🏆 LIGA */
 
 .liga {
   font-size: 14px;
   font-weight: bold;
   margin-top: 6px;
-  color: #555;
+  color: #666;
 }
 
 
