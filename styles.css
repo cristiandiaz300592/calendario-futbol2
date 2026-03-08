@@ -46,9 +46,13 @@ main {
   margin-bottom: 14px;
 }
 
-/* 🔷 TARJETAS DE PARTIDO (MEJORADAS) */
+/* 🔷 TARJETAS DE PARTIDO (ESTILO APP DE RESULTADOS) */
 
 .partido {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 12px;
+
   margin-top: 12px;
   padding: 14px 16px;
 
@@ -66,10 +70,21 @@ main {
   box-shadow: 0 6px 14px rgba(0,0,0,0.12);
 }
 
+/* ⏰ HORA GRANDE A LA IZQUIERDA */
+
+.hora {
+  font-size: 18px;
+  font-weight: bold;
+  color: #0b3c5d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* 🔷 EQUIPOS */
 
 .equipos {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
   display: flex;
   align-items: center;
@@ -79,9 +94,9 @@ main {
 /* 🔷 DETALLE (hora y canal) */
 
 .detalle {
-  font-size: 16px;
-  margin-top: 6px;
-  color: #555;
+  font-size: 14px;
+  margin-top: 4px;
+  color: #666;
 }
 
 /* 🔶 DESTACADO DEL DÍA DE HOY */
@@ -136,10 +151,9 @@ main {
 .liga {
   font-size: 14px;
   font-weight: bold;
-  margin-top: 6px;
+  margin-top: 4px;
   color: #666;
 }
-
 
 
 
