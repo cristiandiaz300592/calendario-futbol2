@@ -150,19 +150,23 @@ Promise.all([
           div.dataset.limite = horaLimite;
         }
 
+        // ⭐ NUEVO FORMATO ESTILO APP
         div.innerHTML = `
-          <div class="equipos">
-            ${p.partido}
-            <span class="division ${p.division === "Primera A" ? "a" : p.division === "Primera B" ? "b" : "int"}">
-              ${p.division}
-            </span>
-          </div>
+          <div class="hora">${p.hora ? p.hora : ""}</div>
 
-          ${p.liga ? `<div class="liga ${obtenerClaseLiga(p.liga)}">🏆 ${p.liga}</div>` : ""}
+          <div>
+            <div class="equipos">
+              ${p.partido}
+              <span class="division ${p.division === "Primera A" ? "a" : p.division === "Primera B" ? "b" : "int"}">
+                ${p.division}
+              </span>
+            </div>
 
-          <div class="detalle">
-            ${p.hora ? "⏰ " + p.hora : ""}
-            ${p.canal ? " 📺 " + p.canal : ""}
+            ${p.liga ? `<div class="liga ${obtenerClaseLiga(p.liga)}">🏆 ${p.liga}</div>` : ""}
+
+            <div class="detalle">
+              ${p.canal ? "📺 " + p.canal : ""}
+            </div>
           </div>
         `;
 
@@ -185,7 +189,6 @@ Promise.all([
 
     });
 
-    // Si un día queda vacío, se elimina el bloque
     document.querySelectorAll(".fecha").forEach(fecha => {
       if (fecha.querySelectorAll(".partido").length === 0) {
         fecha.remove();
