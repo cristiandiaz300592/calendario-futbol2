@@ -27,11 +27,14 @@ const meses = {
 
 function obtenerClaseLiga(nombre) {
   const liga = nombre.toLowerCase();
+
+  if (liga.includes("copa de la liga")) return "copaliga"; // 👈 ESTE
   if (liga.includes("champions")) return "champions";
   if (liga.includes("libertadores")) return "libertadores";
   if (liga.includes("premier")) return "premier";
   if (liga.includes("la liga")) return "laliga";
   if (liga.includes("serie a")) return "seriea";
+
   return "default";
 }
 
