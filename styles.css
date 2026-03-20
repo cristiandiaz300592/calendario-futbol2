@@ -148,8 +148,9 @@ main {
 
 /* 🟣 Copa de la Liga */
 .liga.copaliga {
-  color: #6a1b9a;
-  font-weight: bold;
+  background-color: #6a1b9a;
+  color: #ffffff;
+}
 }
 
 /* 🏆 LIGA */
