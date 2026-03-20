@@ -61,7 +61,7 @@ Promise.all([
   cargarCSV(CSV_A, "Primera A"),
   cargarCSV(CSV_B, "Primera B"),
   cargarCSV(CSV_INT, "Internacional"),
-  cargarCSV(CSV_NUEVO, "Copa de la Liga") // 👈 aquí puedes cambiar el nombre
+  cargarCSV(CSV_NUEVO, "Copa de la Liga")
 ])
 
 .then(data => {
@@ -135,33 +135,34 @@ Promise.all([
 
         let horaLimite = null;
 
-        // ⏰ Calcular límite (inicio + 2h) si es hoy
         if (grupo.fechaObj.getTime() === hoy.getTime() && p.hora) {
 
           const [horaPartido, minutoPartido] = p.hora.split(":").map(Number);
 
           const fechaPartido = new Date(grupo.fechaObj);
           fechaPartido.setHours(horaPartido, minutoPartido, 0, 0);
-
           fechaPartido.setHours(fechaPartido.getHours() + 2);
 
           horaLimite = fechaPartido.getTime();
 
-          if (Date.now() > horaLimite) {
-            return;
-          }
+          if (Date.now() > horaLimite) return;
 
           div.dataset.limite = horaLimite;
         }
 
-        // ⭐ NUEVO FORMATO ESTILO APP
+        // ✅ AQUÍ ESTÁ EL CAMBIO
         div.innerHTML = `
           <div class="hora">${p.hora ? p.hora : ""}</div>
 
           <div>
             <div class="equipos">
               ${p.partido}
-              <span class="division ${p.division === "Primera A" ? "a" : p.division === "Primera B" ? "b" : "int"}">
+              <span class="division ${
+                p.division === "Primera A" ? "a" :
+                p.division === "Primera B" ? "b" :
+                p.division === "Copa de la Liga" ? "copaliga" :
+                "int"
+              }">
                 ${p.division}
               </span>
             </div>
@@ -180,17 +181,12 @@ Promise.all([
       contenedor.appendChild(divFecha);
     });
 
-  // 🔄 Eliminación automática sin refrescar
   setInterval(() => {
-
     document.querySelectorAll(".partido").forEach(partido => {
-
       const limite = partido.dataset.limite;
-
       if (limite && Date.now() > Number(limite)) {
         partido.remove();
       }
-
     });
 
     document.querySelectorAll(".fecha").forEach(fecha => {
@@ -201,10 +197,7 @@ Promise.all([
 
   }, 60000);
 
-  console.log("Calendario funcionando con eliminación automática +2 horas");
-
 })
-
 .catch(err => {
   console.error(err);
   contenedor.innerHTML = "<p>Error cargando el calendario</p>";
