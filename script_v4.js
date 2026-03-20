@@ -161,8 +161,12 @@ Promise.all([
           <div>
             <div class="equipos">
               ${p.partido}
-              <span class="division ${p.division === "Primera A" ? "a" : p.division === "Primera B" ? "b" : "int"}">
-                ${p.division}
+             <span class="division ${
+       p.division === "Primera A" ? "a" :
+       p.division === "Primera B" ? "b" :
+       p.division === "Copa de la Liga" ? "copaliga" :
+       "int"
+}">
               </span>
             </div>
 
