@@ -147,8 +147,9 @@ main {
 }
 
 /* 🟣 Copa de la Liga */
-.liga.copaliga {
+.division.copaliga {
   background-color: #6a1b9a;
+  color: #ffffff;
 }
 }
 
