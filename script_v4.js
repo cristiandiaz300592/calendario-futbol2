@@ -158,17 +158,17 @@ Promise.all([
 
           <div>
             <div class="equipos">
-              ${p.partido}
-              <span class="division ${
-                p.division === "Primera A" ? "a" :
-                p.division === "Primera B" ? "b" :
-                p.division === "Copa de la Liga" ? "copaliga" :
-                "int"
-              }">
-                ${p.division}
-              </span>
-            </div>
-
+  ${p.partido}
+  <span class="division ${
+    p.division === "Primera A" ? "a" :
+    p.division === "Primera B" ? "b" :
+    p.division === "Copa de la Liga" ? "copaliga" :
+    p.division === "Copa Chile" ? "copachile" :
+    "int"
+  }">
+    ${p.division}
+  </span>
+</div>
             ${p.liga ? `<div class="liga ${obtenerClaseLiga(p.liga)}">🏆 ${p.liga}</div>` : ""}
 
             <div class="detalle">
