@@ -62,7 +62,8 @@ Promise.all([
   cargarCSV(CSV_A, "Primera A"),
   cargarCSV(CSV_B, "Primera B"),
   cargarCSV(CSV_INT, "Internacional"),
-  cargarCSV(CSV_NUEVO, "Copa de la Liga")
+  cargarCSV(CSV_NUEVO, "Copa de la Liga"),
+  cargarCSV(CSV_COPA_CHILE, "Copa Chile")
 ])
 
 .then(data => {
