@@ -151,6 +151,11 @@ main {
   background-color: #6a1b9a;
   color: #ffffff;
 }
+/* 🟠 Copa Chile */
+.division.copachile {
+  background-color: #ff9800;
+  color: #ffffff;
+}
 }
 
 /* 🏆 LIGA */
