@@ -103,11 +103,15 @@ Promise.all([
 
       const grupo = fechas[clave];
 
-      grupo.partidos.sort((a, b) => {
-        if (!a.hora) return 1;
-        if (!b.hora) return -1;
-        return a.hora.localeCompare(b.hora);
-      });
+     grupo.partidos.sort((a,b) => {
+  if (!a.hora) return 1;
+  if (!b.hora) return -1;
+
+  const [horaA, minutoA] = a.hora.split(":").map(Number);
+  const [horaB, minutoB] = b.hora.split(":").map(Number);
+
+  return (horaA * 60 + minutoA) - (horaB * 60 + minutoB);
+});
 
       const divFecha = document.createElement("div");
       divFecha.className = "fecha";
